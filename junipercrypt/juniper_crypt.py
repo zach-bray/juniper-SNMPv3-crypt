@@ -78,7 +78,6 @@ def _gap_decode(gaps, decode):
     return chr(num % 256)
 
 
-
 # encrypts <secret> for junipers $9$ format
 def encrypt(secret):
     salt = _random_salt(1)
@@ -96,13 +95,14 @@ def encrypt(secret):
 
     return crypt
 
-# returns 
+# returns number of characters from the alphabet
 def _random_salt(length):
     salt = ""
     for i in range(length):
         salt += NUM_ALPHA[random.randrange(len(NUM_ALPHA))]
     return salt
 
+# encode plain text character with a series of gaps
 def _gap_encode(char, prev, encode):
     crypt = ""
     val = ord(char)
@@ -118,9 +118,3 @@ def _gap_encode(char, prev, encode):
         crypt += c
 
     return crypt
-
-
-if __name__ == "__main__":
-    c = encrypt('teststring')
-    print(c)
-    print decrypt(c)
