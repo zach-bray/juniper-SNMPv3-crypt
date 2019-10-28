@@ -1,11 +1,14 @@
 import setuptools
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+with open("README.md", "r") as f:
+    long_description = f.read()
+
+with open("VERSION", "r") as f:
+    version = f.read()
 
 setuptools.setup(
     name="junipercrypt",
-    version="0.0.2",
+    version=version,
     author="Zach Bray",
     author_email="zachbray123@gmail.com",
     description="Encrypt/decrypts juniper $9$ secrets",

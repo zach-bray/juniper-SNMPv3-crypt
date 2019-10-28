@@ -10,8 +10,6 @@ Ported by: Zach Bray
 import re
 import random
 
-random.seed(1)
-
 MAGIC = "$9$"
 EXTRA = {}
 ENCODING = [
@@ -78,8 +76,13 @@ def _gap_decode(gaps, decode):
     return chr(num % 256)
 
 
+
 # encrypts <secret> for junipers $9$ format
-def encrypt(secret):
+# allows use of seed for idempotent secrets
+def encrypt(secret, seed=False):
+    if seed:
+        random.seed(seed)
+
     salt = _random_salt(1)
     rand = _random_salt(EXTRA[salt])
 
