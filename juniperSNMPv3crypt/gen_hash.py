@@ -11,6 +11,7 @@ import hashlib
 from itertools import repeat
 
 # uses mgmt ip addr to genereate engine id
+# the default prefix is for Juniper
 def gen_engineid(ipaddr, prefix="80000a4c01"):
 	suffix = ""
 
@@ -25,7 +26,7 @@ def hash_profile(user="username", auth=None, priv=None, alg="sha1", engineid=Non
 	auth_msg = derive_msg(auth, engineid, alg)
 	priv_msg = derive_msg(priv, engineid, alg) if priv else "-"
 	
-	mode = "authpriv" if priv else "auth"
+	mode = "authPriv" if priv else "authNoPriv"
 
 	return {
 		"user": user,
@@ -36,18 +37,24 @@ def hash_profile(user="username", auth=None, priv=None, alg="sha1", engineid=Non
 	}
 
 
-# first expand secret to 1MB length and then hash
-def derive_msg(secret, engineid, alg):
-	MB = pow(2,20)
-	c = MB // len(secret)
-	expanded = u''.join(list(repeat(secret, c)))[:MB].encode('utf-8')
-	
-	digest = bytearray(hashlib.md5(expanded).digest())
-	engine = bytearray.fromhex(engineid)
-	
+# use the passhprase and engineid to build the digest
+def derive_msg(passphrase, engineid, alg):
+	digest = get_passphrase_digest(passphrase, alg)
+
 	local_hash = hashlib.new(alg)
 	local_hash.update(digest)
-	local_hash.update(engine)
+	local_hash.update(bytearray.fromhex(engineid))
 	local_hash.update(digest)
 
 	return local_hash.hexdigest()
+
+# expand the passphrase to 1MB and hash it
+def get_passphrase_digest(passphrase, alg):
+	MB = pow(2,20)
+	c = MB // len(passphrase)
+	expanded = u''.join(list(repeat(passphrase, c)))[:MB].encode('utf-8')
+	
+	local_hash = hashlib.new(alg)
+	local_hash.update(expanded)
+
+	return local_hash.digest()
