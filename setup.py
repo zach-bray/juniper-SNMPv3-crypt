@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="juniperSNMPv3crypt",
-    version="0.0.4",
+    version="0.0.5",
     author="Zach Bray",
     author_email="zachbray123@gmail.com",
     description="Encrypt/decrypts juniper $9$ secrets",
