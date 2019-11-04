@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
 """
-This file returns a hash of the snmpv3 profile
+Author: Zach Bray
 
-
+This file returns a hash of the snmpv3 profile according to RFC 3414
+https://tools.ietf.org/html/rfc3414#appendix-A.2.1
 """
 
 import hashlib
-
-from itertools import repeat
 
 # uses mgmt ip addr to genereate engine id
 # the default prefix is for Juniper
@@ -33,7 +32,7 @@ def hash_profile(user="username", auth=None, priv=None, alg="sha1", engineid=Non
 		"auth": auth_msg,
 		"priv": priv_msg,
 		"mode": mode,
-		"exsi_str": user + "/" + str((auth_msg)) + "/" + str((priv_msg)) + "/" + mode
+		"exsi_str": user + "/" + str(auth_msg) + "/" + str(priv_msg) + "/" + mode
 	}
 
 
@@ -52,7 +51,8 @@ def derive_msg(passphrase, engineid, alg):
 def get_passphrase_digest(passphrase, alg):
 	MB = pow(2,20)
 	c = MB // len(passphrase)
-	expanded = u''.join(list(repeat(passphrase, c)))[:MB].encode('utf-8')
+	o = MB % len(passphrase)
+	expanded = (passphrase * c + passphrase[:o]).encode('utf-8')
 	
 	local_hash = hashlib.new(alg)
 	local_hash.update(expanded)
