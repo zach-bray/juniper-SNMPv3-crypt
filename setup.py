@@ -7,7 +7,7 @@ with open("VERSION", "r") as f:
     version = f.read()
 
 setuptools.setup(
-    name="junipercrypt",
+    name="juniperSNMPv3crypt",
     version=version,
     author="Zach Bray",
     author_email="zachbray123@gmail.com",
