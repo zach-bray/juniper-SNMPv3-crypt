@@ -3,12 +3,9 @@ import setuptools
 with open("README.md", "r") as f:
     long_description = f.read()
 
-with open("VERSION", "r") as f:
-    version = f.read()
-
 setuptools.setup(
     name="juniperSNMPv3crypt",
-    version=version,
+    version="0.0.4",
     author="Zach Bray",
     author_email="zachbray123@gmail.com",
     description="Encrypt/decrypts juniper $9$ secrets",
